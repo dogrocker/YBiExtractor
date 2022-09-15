@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -27,7 +28,7 @@ namespace YBiExtractor
         public static List<byte[]> unknown1ByteArray = new List<byte[]>();
         public static List<byte[]> unknown2ByteArray = new List<byte[]>();
 
-        public static List<ItemTemplate> items = new List<ItemTemplate>();
+        //public static List<ItemTemplate> items = new List<ItemTemplate>();
 
         /// <summary>
         /// 
@@ -46,9 +47,6 @@ namespace YBiExtractor
                 {
                     ReadItemDataToTemplate(item);
                 }
-
-                string json = JsonConvert.SerializeObject(items);
-                File.WriteAllText("items.json", json.PrintJson());
             }
 
             Process.GetCurrentProcess().WaitForExit();
@@ -72,38 +70,54 @@ namespace YBiExtractor
 
         public static void ReadItemDataToTemplate(byte[] data)
         {
-            Console.WriteLine(data.FormatHex());
-            Console.WriteLine(BitConverter.ToString(data).Replace("-", ""));
-
             using (MemoryStream Stream = new MemoryStream(data))
             {
                 using (BinaryReader Reader = new BinaryReader(Stream))
                 {
                     ItemTemplate template = new ItemTemplate();
 
-                    template.Id = Reader.ReadInt32(); // 4
-                    Reader.ReadInt32(); //4
+                    template.Id = Reader.ReadInt32();
+                    Reader.ReadInt32();
                     template.Name = Encoding.GetEncoding("TIS-620").GetString(Reader.ReadBytes(64)).Replace("\0", ""); // 64
-                    Reader.ReadByte(); // 1 ZX
-                    template.Side = Reader.ReadByte(); 
-                    template.Class = Reader.ReadByte();
+                    template.Zx = Reader.ReadByte(); // ZX
                     Reader.ReadByte();
+                    template.Job = Reader.ReadByte();
+                    template.Side1 = Reader.ReadByte();
                     template.Level = Reader.ReadInt16();
                     template.JobLevel = Reader.ReadByte();
                     template.Gender = Reader.ReadByte();
-                    template.Category = Reader.ReadByte();
-                    template.SubCategory = Reader.ReadByte();
+                    /*template.Category = */Reader.ReadByte();
+                    /*template.SubCategory = */Reader.ReadByte();
                     template.Weight = Reader.ReadInt16();
                     template.MaxAttack = Reader.ReadInt16();
                     template.MinAttack = Reader.ReadInt16();
                     template.Defense = Reader.ReadInt16();
                     template.Accuracy = Reader.ReadInt16();
                     Reader.ReadInt64();
-                    template.Price = Reader.ReadInt32();
+                    template.Price = Reader.ReadInt32(); //100 101 102 103
+
+                    Reader.ReadBytes(4); // 104 105 106 107
+
+                    template.SalePrice = Reader.ReadInt32(); // 108 109 110 111
+
+                    Reader.ReadByte(); // 112
+
+                    template.Unk2 = Reader.ReadInt16(); // 113 114 115 116
+
+                    Reader.ReadBytes(39); // 117 ~ 155
 
                     template.Description = Encoding.GetEncoding("TIS-620").GetString(data, 156, 256).Replace("\0", "");
 
-                    items.Add(template);
+                    template.Wx = BitConverter.ToInt32(data, 412);
+                    template.Wxjd = BitConverter.ToInt32(data, 416);
+
+                    string json = JsonConvert.SerializeObject(template);
+                    File.WriteAllText($"data/items/{template.Id}.json", json.PrintJson());
+                    Console.WriteLine($"Write file: data/items/{template.Id}.json");
+                    if(template.Id == 700117)
+                    {
+                        Console.WriteLine(BitConverter.ToString(data).Replace("-", ""));
+                    }
                 }
             }
         }
