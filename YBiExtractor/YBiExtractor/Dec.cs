@@ -39,8 +39,8 @@ namespace YBiExtractor
                 startIndex += 4;
             }
 
-            using (FileStream fileStream = File.OpenWrite("YBi.dec.cfg"))
-                fileStream.Write(buffer, 0, buffer.Length);
+            //using (FileStream fileStream = File.OpenWrite("YBi.dec.cfg"))
+            //    fileStream.Write(buffer, 0, buffer.Length);
 
             return buffer;
             
