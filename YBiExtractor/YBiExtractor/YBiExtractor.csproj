@@ -46,7 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ItemBuilder.cs" />
     <Compile Include="Templates\ItemTemplate.cs" />
+    <Compile Include="Templates\MapTemplate.cs" />
     <Compile Include="YbiReader.cs" />
     <Compile Include="Dec.cs" />
     <Compile Include="Funcs.cs" />
