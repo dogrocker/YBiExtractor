@@ -1,10 +1,6 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
-using System.Text;
-using YBiExtractor.Templates;
+using YBiExtractor.Builder;
 
 namespace YBiExtractor
 {
@@ -22,6 +18,9 @@ namespace YBiExtractor
 
                 ItemBuilder.YBBuffer = ybiBytes;
                 ItemBuilder.ProcessYBItemData();
+
+                MapBuilder.YBBuffer = ybiBytes;
+                MapBuilder.ProcessYBMapData();
             }
 
             Process.GetCurrentProcess().WaitForExit();

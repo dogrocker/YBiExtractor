@@ -39,9 +39,11 @@ namespace YBiExtractor
                 startIndex += 4;
             }
 
+            using (FileStream fileStream = File.OpenWrite("YBi.dec.cfg"))
+                fileStream.Write(buffer, 0, buffer.Length);
+
             return buffer;
-            //using (FileStream fileStream = File.OpenWrite(OutPutFile))
-            //    fileStream.Write(buffer, 0, buffer.Length);
+            
         }
 
         private static int MoveBit(int src, int oldLoc, int newLoc)
