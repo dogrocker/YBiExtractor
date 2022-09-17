@@ -31,6 +31,7 @@ namespace YBiExtractor.Builder
 
             try
             {
+                Directory.CreateDirectory("data/items/");
                 foreach (byte[] data in ItemBufferList)
                 {
                     using (MemoryStream Stream = new MemoryStream(data))
