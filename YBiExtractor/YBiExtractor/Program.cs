@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using YBiExtractor.Builder;
 
@@ -12,7 +13,11 @@ namespace YBiExtractor
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            if(File.Exists("./YBi.cfg"))
+            if (!File.Exists("./YBi.cfg"))
+            {
+                Console.WriteLine("YBi.cfg not found in directory.");
+            }
+            else
             {
                 byte[] ybiBytes = Dec.Decrypt();
 
@@ -22,7 +27,6 @@ namespace YBiExtractor
                 MapBuilder.YBBuffer = ybiBytes;
                 MapBuilder.ProcessYBMapData();
             }
-
             Process.GetCurrentProcess().WaitForExit();
         }
     }
