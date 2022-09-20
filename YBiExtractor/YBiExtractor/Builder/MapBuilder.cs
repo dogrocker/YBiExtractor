@@ -14,6 +14,7 @@ namespace YBiExtractor.Builder
         public static int BytesOfSeparation = 744; // TH = 744, EN = ???
         public static int ID_Offset = 0x022BE2FC; // TH = 0x022BE2FC, EN = 0x0223BC40
         public static List<byte[]> MapBufferList = new List<byte[]>();
+        public static List<MapTemplate> MapTemplates = new List<MapTemplate>();
 
         public static void ProcessYBMapData()
         {
@@ -40,16 +41,14 @@ namespace YBiExtractor.Builder
                             MapTemplate template = new MapTemplate();
                             template.Id = Reader.ReadInt32();
                             template.Name = Encoding.GetEncoding("TIS-620").GetString(Reader.ReadBytes(64)).Replace("\0", "");
-                            template.UnkF1 = Reader.ReadSingle();
-                            template.UnkF2 = Reader.ReadSingle();
-                            template.UnkF3 = Reader.ReadSingle();
-                            template.UnkA1 = Reader.ReadSingle();
-                            template.UnkA2 = Reader.ReadSingle();
-                            template.UnkA3 = Reader.ReadSingle();
+                            template.X1 = Reader.ReadSingle();
+                            template.Z1 = Reader.ReadSingle();
+                            template.Y1 = Reader.ReadSingle();
+                            template.X2 = Reader.ReadSingle();
+                            template.Z2 = Reader.ReadSingle();
+                            template.Y2 = Reader.ReadSingle();
 
-                            string json = JsonConvert.SerializeObject(template);
-                            File.WriteAllText($"data/maps/{template.Id}.json", json.PrintJson());
-                            Console.WriteLine($"Write file: data/maps/{template.Id}.json");
+                            MapTemplates.Add(template);
                         }
                     }
                 }
@@ -57,6 +56,12 @@ namespace YBiExtractor.Builder
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                string json = JsonConvert.SerializeObject(MapTemplates);
+                File.WriteAllText($"data/maps.json", json.PrintJson());
+                Console.WriteLine($"Write file: data/maps.json");
             }
         }
     }

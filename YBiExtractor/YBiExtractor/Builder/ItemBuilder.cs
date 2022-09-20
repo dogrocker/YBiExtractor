@@ -14,6 +14,7 @@ namespace YBiExtractor.Builder
         public static int BytesOfSeparation = 852;
         public static int ID_Offset = 0x0000035c;
         public static List<byte[]> ItemBufferList = new List<byte[]>();
+        public static List<ItemTemplate> ItemTemplates = new List<ItemTemplate>();
 
         public static void ProcessYBItemData()
         {
@@ -76,9 +77,7 @@ namespace YBiExtractor.Builder
                             template.Wx = BitConverter.ToInt32(data, 412);
                             template.Wxjd = BitConverter.ToInt32(data, 416);
 
-                            string json = JsonConvert.SerializeObject(template);
-                            File.WriteAllText($"data/items/{template.Id}.json", json.PrintJson());
-                            Console.WriteLine($"Write file: data/items/{template.Id}.json");
+                            ItemTemplates.Add(template);
                         }
                     }
                 }
@@ -86,6 +85,12 @@ namespace YBiExtractor.Builder
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                string json = JsonConvert.SerializeObject(ItemTemplates);
+                File.WriteAllText($"data/items.json", json.PrintJson());
+                Console.WriteLine($"Write file: data/items.json");
             }
         }
     }
