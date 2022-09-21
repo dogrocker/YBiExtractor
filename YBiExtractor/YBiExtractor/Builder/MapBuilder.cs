@@ -31,7 +31,6 @@ namespace YBiExtractor.Builder
 
             try
             {
-                Directory.CreateDirectory("data/maps/");
                 foreach (byte[] data in MapBufferList)
                 {
                     using (MemoryStream Stream = new MemoryStream(data))
